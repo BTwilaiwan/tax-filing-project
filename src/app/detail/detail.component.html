@@ -2,7 +2,7 @@
 <div class="container">
     <h2>Submit Tax Filing</h2>
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12 col-sm-12">
             <div class="timeline-steps aos-init aos-animate" data-aos="fade-up">
                 <div [ngClass]="{ 'timeline-step-active': page === 'Review', 'timeline-step': page !== 'Review'}">
                     <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" >
@@ -40,11 +40,11 @@
                         </div>
                     </div>
                     <div class="row label-padding">
-                        <div class="col-4">
+                        <div class="col-md-4 col-sm-4">
                             <label *ngIf="filingType === '0'">VAT Month <span class="require">*</span></label>
                             <label *ngIf="filingType === '1'">Tax Month <span class="require">*</span></label>
                         </div>
-                        <div class="col-4" *ngIf="filingType === '1'">
+                        <div class="col-md-4 col-sm-4" *ngIf="filingType === '1'">
                             <label>Type<span class="require">*</span></label>
                         </div>
                     </div>
