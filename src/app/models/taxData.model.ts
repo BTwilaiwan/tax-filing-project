@@ -1,6 +1,6 @@
 export interface TAXDATA {
     filingType: string | undefined;
-    month: string;
+    month: string | undefined;
     year: string;
     saleAmount: number;
     taxAmount: number;

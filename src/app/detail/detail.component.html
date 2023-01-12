@@ -51,21 +51,24 @@
                    
                     <div class="row label-default">
                         <div class="col-2 text-right">
-                            <select class="form-select" aria-label="Default select example" formControlName="month" [ngClass]="{ 'required-input': submit && inputDetail.value.month === '0' }">
+                            <select class="form-select" formControlName="month" [ngClass]="{ 'required-input': submit && inputDetail.value.month === '0' }">
                                 <option selected value="0" disabled>Please Select</option>
-                                <option *ngFor="let item of listMonth" value="{{item.label}}" disabled="{{item.disable}}">{{item.label}}</option>
+                                <option *ngFor="let item of listMonth" value="{{item.value}}" disabled="{{item.disable}}">{{item.label}}</option>
                             </select>
                             <label class="require" *ngIf="submit && inputDetail.value.month === '0'">Invalid Data</label>
                         </div>
                         <div class="col-2 text-right">
-                            <select class="form-select" aria-label="Default select example" formControlName="year" [ngClass]="{ 'required-input': submit && inputDetail.value.year === '0' }">
+                            <select class="form-select" formControlName="year" [ngClass]="{ 'required-input': submit && inputDetail.value.year === '0' }">
                                 <option selected value="0" disabled>Please Select</option>
                                 <option *ngFor="let item of listYear" value="{{item.value}}">{{item.label}}</option>
                             </select>
                             <label class="require" *ngIf="submit && inputDetail.value.year === '0'">Invalid Data</label>
                         </div>
                         <div class="col-2" *ngIf="filingType === '1'">
-                            <select class="form-select" aria-label="Default select example" formControlName="type" >
+                            <select class="form-select" *ngIf="page === 'Input'">
+                                <option selected value="0">On-Time</option>
+                            </select>
+                            <select class="form-select" *ngIf="page !== 'Input'" disabled>
                                 <option selected value="0">On-Time</option>
                             </select>
                         </div>
@@ -164,18 +167,18 @@
                     </div>
                 </div>
                 <div class="row label-padding">
-                    <div class="col-10">
+                    <div class="col-8">
                         <label><strong>Total value of taxable electronic service exclusive of VAT</strong></label>
                     </div>
-                    <div class="col-2 text-right">
+                    <div class="col-4 text-right">
                         <label>{{ taxData?.saleAmount }} THB</label>
                     </div>
                 </div>
                 <div class="row label-padding">
-                    <div class="col-10">
+                    <div class="col-8">
                         <label><strong>Total value to be remitted</strong></label>
                     </div>
-                    <div class="col-2 text-right">
+                    <div class="col-4 text-right">
                         <label>{{ taxData?.taxAmount }} THB</label>
                     </div>
                 </div>
@@ -185,10 +188,10 @@
                     </div>
                 </div>
                 <div class="row label-padding">
-                    <div class="col-10">
+                    <div class="col-8">
                         <label><strong>Total Amount Payable</strong></label>
                     </div>
-                    <div class="col-2 text-right">
+                    <div class="col-4 text-right">
                         <label><strong>{{ taxData?.taxAmount }} THB </strong></label>
                     </div>
                 </div><br>
@@ -214,8 +217,31 @@
                 <button type="button" class="btn btn-dark ml-05" [disabled]="page === 'Review'" (click)="onNext()">Next</button>
             </div>
             <div class="p-d-flex p-ml-auto text-center" *ngIf="page === 'Review'">
-                <button type="button" class="btn btn-dark" (click)="false">Confirm and Submit</button>
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalConfirm">Confirm and Submit</button>
             </div>
         </div>
+    </div>
+</div>
+
+
+<!-- Vertically centered modal -->
+<div class="modal-dialog modal-dialog-centered">
+
+</div>
+
+<div class="modal fade" id="modalConfirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalConfirmLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalConfirmLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{ jsonTaxData | json }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
 </div>

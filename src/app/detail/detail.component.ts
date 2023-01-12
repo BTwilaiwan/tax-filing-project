@@ -1,9 +1,9 @@
-import { Component, OnInit, Inject, LOCALE_ID } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, LOCALE_ID } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LISTMONTH, LISTYEAR, LISTFILINGTYPE } from './constants/detail.constants';
 import * as Icon from '@fortawesome/free-solid-svg-icons';
 import { TAXDATA } from '../models/taxData.model';
-import { DecimalPipe, formatNumber } from '@angular/common';
+import { formatNumber } from '@angular/common';
 import * as _ from 'lodash';
 
 @Component({
@@ -12,7 +12,7 @@ import * as _ from 'lodash';
   styleUrls: ['./detail.component.css']
 })
 export class DetailComponent implements OnInit {
-  
+
   public today = new Date();
   public inputDetail!: FormGroup; 
   public listMonth: any[] = []; 
@@ -24,6 +24,7 @@ export class DetailComponent implements OnInit {
   public page = 'Input';
   public taxData: any;
   public icon = Icon;
+  public jsonTaxData: any;
 
   constructor(
     private fb: FormBuilder,
@@ -41,14 +42,13 @@ export class DetailComponent implements OnInit {
     }))
     this.listMonth = _.cloneDeep(ddlMonth)
     this.initForm();
-
   }
 
   initForm() {
     this.inputDetail = this.fb.group({
       month: new FormControl({ value: '0', disabled: false }, [Validators.required]),
       year: new FormControl({ value: '0', disabled: false }, [Validators.required]),
-      type: new FormControl({ value: '0', disabled: false }),
+      // type: new FormControl({ value: '0', disabled: false }),
       saleAmount: new FormControl({ value: '', disabled: false }, [Validators.required]),
       taxAmount: new FormControl({ value: '', disabled: false }, [Validators.required]),
       surcharge: new FormControl({ value: '', disabled: false }),
@@ -61,7 +61,7 @@ export class DetailComponent implements OnInit {
     if (this.inputDetail.value[fieldName] != null) {
       this.inputDetail.controls[fieldName].patchValue(this.inputDetail.value[fieldName].replace(/[^0-9.]*/g, ''));
       if (fieldName === 'saleAmount' && this.inputDetail.value.saleAmount !== '') {
-        this.submit = false;
+        this.invalidTax = false;
         let amount = Number(this.inputDetail.value.saleAmount);
         let numVat = (amount * 0.07);
         let defautTax = Number(numVat.toFixed(2));
@@ -92,11 +92,19 @@ export class DetailComponent implements OnInit {
     && this.page === 'Input') {
       this.page = 'Detail';
       const data: TAXDATA = _.cloneDeep(this.inputDetail.value);
-      data.filingType = LISTFILINGTYPE.find(e => e.value === this.filingType)?.label;
-      this.taxData = data;
+      const dataDetail = this.inputDetail.value;
+      this.jsonTaxData = _.cloneDeep(data);
+      this.jsonTaxData.filingType = this.filingType;
+      this.jsonTaxData.saleAmount = +(dataDetail.surcharge.replace(/[^0-9.]*/g, ''));
+      this.jsonTaxData.taxAmount = +(dataDetail.taxAmount.replace(/[^0-9.]*/g, ''));
+      this.jsonTaxData.surcharge = +(dataDetail.surcharge.replace(/[^0-9.]*/g, ''));
+      this.jsonTaxData.penalty = +(dataDetail.penalty.replace(/[^0-9.]*/g, ''));
+      this.jsonTaxData.totalAmount = +(dataDetail.totalAmount.replace(/[^0-9.]*/g, ''));
+      this.taxData = _.cloneDeep(data);
+      this.taxData.filingType = LISTFILINGTYPE.find(e => e.value === this.filingType)?.label;
+      this.taxData.month = LISTMONTH.find(e => e.value === data.month)?.label;
       this.inputDetail.controls['month'].disable();
       this.inputDetail.controls['year'].disable();
-      this.inputDetail.controls['type'].disable();
       this.inputDetail.controls['saleAmount'].disable();
       this.inputDetail.controls['taxAmount'].disable();
     } 
@@ -109,7 +117,6 @@ export class DetailComponent implements OnInit {
       this.page = 'Input';
       this.inputDetail.controls['month'].enable();
       this.inputDetail.controls['year'].enable();
-      this.inputDetail.controls['type'].enable();
       this.inputDetail.controls['saleAmount'].enable();
       this.inputDetail.controls['taxAmount'].enable();
     }
