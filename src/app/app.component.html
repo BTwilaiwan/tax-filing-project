@@ -1,1 +1,26 @@
-{{title}}
+ <nav class="navbar navbar-expand-lg bg-light">
+    <div class="navbar-nav flex-row flex-wrap ms-md-auto">
+        <span class="navbar-text">
+            Time in Thailand: {{today | date: 'HH:mm'}} (GMT+7) | {{ today | date: 'dd MMM yyyy'}}
+        </span>
+        <i class="fa-solid fa-circle-user iconNav"></i>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+            
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" >
+                    Lorem Co Ltd.
+                    </a>
+                    <!-- <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul> -->
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<router-outlet></router-outlet>

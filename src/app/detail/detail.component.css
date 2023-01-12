@@ -1,0 +1,140 @@
+.container {
+    padding-bottom: 30px;
+}
+
+.card {
+    padding: 10px;
+    width: 80%;
+}
+
+h2 {
+    padding: 50px;
+    text-align: center;
+}
+
+.head-line {
+    border-bottom: 1px solid #00000026;
+}
+
+.justify-center {
+    justify-content: center;
+}
+.text-center {
+    text-align: center;
+}
+
+.label-padding {
+    padding-top: 20px;
+}
+.label-default {
+    padding-top: 10px;
+}
+
+.require {
+    color: red;
+}
+
+.required-input {
+    border: 1px solid red;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.text-right {
+    text-align: end;
+}
+
+.p-grid {
+    width: 80%;
+}
+
+.ml-05 {
+    margin-left: 10px;
+}
+
+
+/* body{margin-top:20px;} */
+
+.timeline-steps {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap
+}
+
+.timeline-steps .timeline-step, .timeline-steps .timeline-step-active {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin: 1rem
+}
+
+@media (min-width:768px) {
+    .timeline-steps .timeline-step:not(:last-child):after {
+        content: "";
+        display: block;
+        border-top: 1px solid #00000059;
+        width: 3.46rem;
+        position: absolute;
+        left: 7.5rem;
+        top: .3125rem
+    }
+    .timeline-steps .timeline-step:not(:first-child):before {
+        content: "";
+        display: block;
+        border-top: 1px solid #00000059;
+        width: 3.8125rem;
+        position: absolute;
+        right: 7.5rem;
+        top: .3125rem
+    }
+    .timeline-steps .timeline-step-active:not(:last-child):after {
+        content: "";
+        display: block;
+        border-top: 1px solid black;
+        width: 3.46rem;
+        position: absolute;
+        left: 7.5rem;
+        top: .3125rem
+    }
+    .timeline-steps .timeline-step-active:not(:first-child):before {
+        content: "";
+        display: block;
+        border-top: 1px solid black;
+        width: 3.8125rem;
+        position: absolute;
+        right: 7.5rem;
+        top: .3125rem
+    }
+}
+
+.timeline-steps .timeline-content {
+    width: 10rem;
+    text-align: center
+}
+
+
+.form-control:disabled, .form-select:disabled {
+    background-color: #FFF;
+}
+
+.circleDefault {
+    border: 1px solid black;
+    border-radius: 100%;
+    padding: 0px 6px 0px 6px;
+}
+
+.circleInActive {
+    border: 1px solid #00000059;
+    border-radius: 100%;
+    padding: 0px 6px 0px 6px;
+}
+.circleReview {
+    border: 1px solid black;
+    background-color: black;
+    color: #FFF;
+    border-radius: 100%;
+    padding: 0px 6px 0px 6px;
+}

@@ -1,0 +1,221 @@
+
+<div class="container">
+    <h2>Submit Tax Filing</h2>
+    <div class="row">
+        <div class="col-12">
+            <div class="timeline-steps aos-init aos-animate" data-aos="fade-up">
+                <div [ngClass]="{ 'timeline-step-active': page === 'Review', 'timeline-step': page !== 'Review'}">
+                    <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" >
+                        <span class="circleDefault" *ngIf="page !== 'Review'">1</span>
+                        <span class="circleReview" *ngIf="page === 'Review'">1</span>
+                        <p *ngIf="page === 'Input'"><strong>Input Tax</strong></p>
+                        <p *ngIf="page !== 'Input'"><strong>Input Detail</strong></p>
+                    </div>
+                </div>
+                <div [ngClass]="{ 'timeline-step-active': page === 'Review', 'timeline-step': page !== 'Review'}">
+                    <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" >
+                        <span class="circleInActive" *ngIf="page !== 'Review'">2</span>
+                        <span class="circleDefault" *ngIf="page === 'Review'">2</span>
+                        <p class="h6 text-muted mb-0 mb-lg-0" *ngIf="page !== 'Review'">Review & Confirm</p>
+                        <p *ngIf="page === 'Review'"><strong>Review & Confirm</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-center" *ngIf="page !== 'Review'">
+        <div class="card">
+            <form [formGroup]="inputDetail">
+                <div class="card-body">
+                    <div class="row head-line">
+                        <h5>1. Tax Filing Detail</h5><i class="fa-solid fa-circle-2"></i>
+                    </div>
+                    <div class="row label-padding">
+                        <label>Type of filing <span class="require">*</span></label>
+                    </div>
+                    <div class="label-default">
+                        <div class="form-check form-check-inline" *ngFor="let item of listFilingType; index as i">
+                            <input class="form-check-input" type="radio" name="radioFilingType" id="radioFilingType{{i}}" value="{{item.value}}" [(ngModel)]="filingType"  [ngModelOptions]="{standalone: true}">
+                            <label class="form-check-label" for="radioFilingType{{i}}">{{item.label}} <i class="fa-solid fa-circle-question"></i></label>
+                        </div>
+                    </div>
+                    <div class="row label-padding">
+                        <div class="col-4">
+                            <label *ngIf="filingType === '0'">VAT Month <span class="require">*</span></label>
+                            <label *ngIf="filingType === '1'">Tax Month <span class="require">*</span></label>
+                        </div>
+                        <div class="col-4" *ngIf="filingType === '1'">
+                            <label>Type<span class="require">*</span></label>
+                        </div>
+                    </div>
+                   
+                    <div class="row label-default">
+                        <div class="col-2 text-right">
+                            <select class="form-select" aria-label="Default select example" formControlName="month" [ngClass]="{ 'required-input': submit && inputDetail.value.month === '0' }">
+                                <option selected value="0" disabled>Please Select</option>
+                                <option *ngFor="let item of listMonth" value="{{item.label}}" disabled="{{item.disable}}">{{item.label}}</option>
+                            </select>
+                            <label class="require" *ngIf="submit && inputDetail.value.month === '0'">Invalid Data</label>
+                        </div>
+                        <div class="col-2 text-right">
+                            <select class="form-select" aria-label="Default select example" formControlName="year" [ngClass]="{ 'required-input': submit && inputDetail.value.year === '0' }">
+                                <option selected value="0" disabled>Please Select</option>
+                                <option *ngFor="let item of listYear" value="{{item.value}}">{{item.label}}</option>
+                            </select>
+                            <label class="require" *ngIf="submit && inputDetail.value.year === '0'">Invalid Data</label>
+                        </div>
+                        <div class="col-2" *ngIf="filingType === '1'">
+                            <select class="form-select" aria-label="Default select example" formControlName="type" >
+                                <option selected value="0">On-Time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10 head-line label-padding">
+                            <h5>2. Tax Computation</h5>
+                        </div>
+                        <div class="col-2 head-line label-padding" >
+                            <label class="underline" *ngIf="page === 'Input'">View Exchange Rate</label>
+                        </div>
+                    </div>
+                    <div class="row label-padding">
+                        <label><strong>Provide total value taxable electronic service <span class="require">*</span></strong></label>
+                    </div>
+                    <div class="row label-default">
+                        <div class="col-9">
+                            <label>1. Total value of taxable electronic service exclusive of VAT</label>
+                        </div>
+                        <div class="col-3 text-right">
+                            <input class="text-right form-control" type="text" placeholder="THB" formControlName="saleAmount" (change)="numberOnly('saleAmount')"
+                            [ngClass]="{'required-input': submit && validator('saleAmount')}">
+                            <label class="require" *ngIf="submit && validator('saleAmount')">Invalid Data</label>
+                        </div>
+                    </div>
+                    <div class="row label-default">
+                        <div class="col-9">
+                            <label>2. Total value to be remitted (7% of 1.)</label>
+                        </div>
+                        <div class="col-3 text-right">
+                            <input class="text-right form-control" type="text" placeholder="THB" formControlName="taxAmount" (change)="numberOnly('taxAmount')"
+                            [ngClass]="{'required-input': (submit && validator('taxAmount')) || invalidTax}">
+                            <label class="require" *ngIf="invalidTax">Invalid Tax</label>
+                            <label class="require" *ngIf="submit && validator('taxAmount')">Invalid Data</label>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="filingType === '1'">
+                        <div class="col-12 label-padding">
+                            <label><strong>In case of late filing and payment, or additional filing</strong></label>
+                        </div>
+                    </div>
+                    <div class="row label-default" *ngIf="filingType === '1'">
+                        <div class="col-9">
+                            <label>3. Surcharge <i class="fa-solid fa-circle-question"></i></label>
+                        </div>
+                        <div class="col-3 text-right">
+                            <input class="text-right form-control" type="text" placeholder="THB" formControlName="surcharge" placeholder="0.00 THB" readonly>
+                        </div>
+                    </div>
+                    <div class="row label-default" *ngIf="filingType === '1'">
+                        <div class="col-9">
+                            <label>4. Penality <i class="fa-solid fa-circle-question"></i></label>
+                        </div>
+                        <div class="col-3 text-right">
+                            <input class="text-right form-control" type="text" placeholder="THB" formControlName="penalty" placeholder="0.00 THB" readonly>
+                        </div>
+                    </div>
+                    <div class="row label-default" *ngIf="filingType === '1'">
+                        <div class="col-9">
+                            <label>5. Total amount of VAT, surcharge, and penalty to be remitted (2.+3.+4.)</label>
+                        </div>
+                        <div class="col-3 text-right">
+                            <input class="text-right form-control" type="text" placeholder="THB" formControlName="totalAmount" placeholder="0.00 THB" readonly>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-center" *ngIf="page === 'Review'">
+        <div class="card">
+            <div class="card-body">
+                <div class="row head-line">
+                    <h5>Tax Filing Detail</h5>
+                </div>
+                <div class="row label-padding">
+                    <div class="col-2">
+                        <label><strong>Type of filing</strong></label>
+                    </div>
+                    <div class="col-10">
+                        <label>{{taxData?.filingType}}</label>
+                    </div>
+                </div>
+                <div class="row label-padding">
+                    <div class="col-2">
+                        <label><strong>VAT Month</strong></label>
+                    </div>
+                    <div class="col-10">
+                        <label>{{taxData?.month}} {{taxData?.year}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 head-line label-padding">
+                        <h5>Tax Computation</h5>
+                    </div>
+                </div>
+                <div class="row label-padding">
+                    <div class="col-10">
+                        <label><strong>Total value of taxable electronic service exclusive of VAT</strong></label>
+                    </div>
+                    <div class="col-2 text-right">
+                        <label>{{ taxData?.saleAmount }} THB</label>
+                    </div>
+                </div>
+                <div class="row label-padding">
+                    <div class="col-10">
+                        <label><strong>Total value to be remitted</strong></label>
+                    </div>
+                    <div class="col-2 text-right">
+                        <label>{{ taxData?.taxAmount }} THB</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label>(7% of Total value of taxable electronic service exclusive of VAT)</label>
+                    </div>
+                </div>
+                <div class="row label-padding">
+                    <div class="col-10">
+                        <label><strong>Total Amount Payable</strong></label>
+                    </div>
+                    <div class="col-2 text-right">
+                        <label><strong>{{ taxData?.taxAmount }} THB </strong></label>
+                    </div>
+                </div><br>
+                <div class="row head-line label-padding">
+                    <h5>Declaration</h5>
+                </div>
+                <div class="row label-padding">
+                    <div class="col-12">
+                        <label>I hereby certify that information given above are true and correct and agree to be 
+                            bound by such information
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row justify-center label-default">
+        <div class="p-formgroup-inline p-grid margin-top">
+            <div class="p-d-flex p-ml-auto" *ngIf="page !== 'Review'">
+                <button type="button" class="btn btn-outline-secondary" [disabled]="page === 'Input'" (click)="onBack()">Back</button>
+                <button type="button" class="btn btn-dark ml-05" [disabled]="page === 'Review'" (click)="onNext()">Next</button>
+            </div>
+            <div class="p-d-flex p-ml-auto text-center" *ngIf="page === 'Review'">
+                <button type="button" class="btn btn-dark" (click)="false">Confirm and Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
